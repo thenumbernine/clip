@@ -7,6 +7,7 @@ project(clip LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
   # Use libc++ explicitly so we can compile for
@@ -24,7 +25,7 @@ if(UNIX AND NOT APPLE)
   option(CLIP_X11_WITH_PNG "Compile with libpng to support copy/paste image in png format" on)
 endif()
 
-add_library(clip clip.cpp)
+add_library(clip clip.cpp cclip.cpp)
 
 if(CLIP_ENABLE_IMAGE)
   target_sources(clip PRIVATE image.cpp)
