@@ -1,5 +1,6 @@
 #include "cclip.h"
 #include "clip.h"
+#include <string.h>	//memcpy
 
 static_assert(std::is_same<clip::format, ClipFormat>::value, "clip::format doesn't match");
 
