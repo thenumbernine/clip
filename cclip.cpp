@@ -28,54 +28,53 @@ ASSERT_FIELDS_MATCH(green_shift)
 ASSERT_FIELDS_MATCH(blue_shift)
 ASSERT_FIELDS_MATCH(alpha_shift)
 
-extern "C" {
 
-ClipLock * clip_lock_new() {
+CCLIP_API ClipLock * clip_lock_new() {
 	return (ClipLock*)new clip::lock();
 }
 
-ClipLock * clip_lock_new_p(void * native_window_handle) {
+CCLIP_API ClipLock * clip_lock_new_p(void * native_window_handle) {
 	return (ClipLock*)new clip::lock(native_window_handle);
 }
 
-void clip_lock_free(ClipLock * lock) { 
+CCLIP_API void clip_lock_free(ClipLock * lock) {
 	delete (clip::lock*)lock;
 }
 
-bool clip_lock_locked(ClipLock const * lock) { 
+CCLIP_API bool clip_lock_locked(ClipLock const * lock) {
 	return ((clip::lock const *)lock)->locked(); 
 } 
 
-bool clip_lock_clear(ClipLock * lock) { 
+CCLIP_API bool clip_lock_clear(ClipLock * lock) {
 	return ((clip::lock *)lock)->clear(); 
 }
 
-bool clip_lock_is_convertible(ClipLock const * lock, ClipFormat f) {
+CCLIP_API bool clip_lock_is_convertible(ClipLock const * lock, ClipFormat f) {
 	return ((clip::lock const *)lock)->is_convertible(f);
 }
 
-bool clip_lock_set_data(ClipLock * lock, ClipFormat f, char const * buf, size_t len) {
+CCLIP_API bool clip_lock_set_data(ClipLock * lock, ClipFormat f, char const * buf, size_t len) {
 	return ((clip::lock *)lock)->set_data(f, buf, len);
 }
 
-bool clip_lock_get_data(ClipLock const * lock, ClipFormat f, char * buf, size_t len) {
+CCLIP_API bool clip_lock_get_data(ClipLock const * lock, ClipFormat f, char * buf, size_t len) {
 	return ((clip::lock const *)lock)->get_data(f, buf, len);
 }
 
-size_t clip_lock_get_data_length(ClipLock const * lock, ClipFormat f) {
+CCLIP_API size_t clip_lock_get_data_length(ClipLock const * lock, ClipFormat f) {
 	return ((clip::lock const *)lock)->get_data_length(f);
 }
 
 #if CLIP_ENABLE_IMAGE
-bool clip_lock_set_image(ClipLock * lock, ClipImage const * image) {
+CCLIP_API bool clip_lock_set_image(ClipLock * lock, ClipImage const * image) {
 	return ((clip::lock *)lock)->set_image(*(clip::image const *)image);
 }
 
-bool clip_lock_get_image(ClipLock const * lock, ClipImage * image) {
+CCLIP_API bool clip_lock_get_image(ClipLock const * lock, ClipImage * image) {
 	return ((clip::lock const *)lock)->get_image(*(clip::image *)image);
 }
 
-bool clip_lock_get_image_spec(ClipLock const * lock, ClipImageSpec * spec) {
+CCLIP_API bool clip_lock_get_image_spec(ClipLock const * lock, ClipImageSpec * spec) {
 	return ((clip::lock const *)lock)->get_image_spec(*(clip::image_spec*)spec);
 }
 #endif
@@ -83,45 +82,45 @@ bool clip_lock_get_image_spec(ClipLock const * lock, ClipImageSpec * spec) {
 #error TODO you are here, make a vector-getter for C
 #endif
 
-ClipFormat clip_register_format(char const * name, size_t len) {
+CCLIP_API ClipFormat clip_register_format(char const * name, size_t len) {
 	return clip::register_format(std::string(name, len));
 }
 
-ClipFormat clip_empty_format() {
+CCLIP_API ClipFormat clip_empty_format() {
 	return clip::empty_format();
 }
 
-ClipFormat clip_text_format() {
+CCLIP_API ClipFormat clip_text_format() {
 	return clip::text_format();
 }
 
 #if CLIP_ENABLE_IMAGE
-ClipFormat clip_image_format() {
+CCLIP_API ClipFormat clip_image_format() {
 	return clip::image_format();
 }
 #endif
 
-bool clip_has(ClipFormat f) {
+CCLIP_API bool clip_has(ClipFormat f) {
 	return clip::has(f);
 }
 
-bool clip_clear() {
+CCLIP_API bool clip_clear() {
 	return clip::clear();
 }
 
-void clip_set_error_handler(ClipErrorHandler f) {
+CCLIP_API void clip_set_error_handler(ClipErrorHandler f) {
 	clip::set_error_handler((clip::error_handler)f);
 }
 
-ClipErrorHandler clip_get_error_handler() {
+CCLIP_API ClipErrorHandler clip_get_error_handler() {
 	return (ClipErrorHandler)clip::get_error_handler();
 }
 
-bool clip_set_text(char const * value, size_t len) {
+CCLIP_API bool clip_set_text(char const * value, size_t len) {
 	return clip::set_text(std::string(value,len));
 }
 
-bool clip_get_text(char * valuecptr, size_t * len) {
+CCLIP_API bool clip_get_text(char * valuecptr, size_t * len) {
 	std::string value;
 	if (!clip::get_text(value)) return false;
 	if (len) {
@@ -142,63 +141,61 @@ bool clip_get_text(char * valuecptr, size_t * len) {
 }
 
 #if CLIP_ENABLE_IMAGE
-ClipImage * clip_image_new() {
+CCLIP_API ClipImage * clip_image_new() {
 	return (ClipImage*)new clip::image();
 }
 
-ClipImage * clip_image_new_p(ClipImageSpec const * spec) {
+CCLIP_API ClipImage * clip_image_new_p(ClipImageSpec const * spec) {
 	return (ClipImage*)new clip::image(*(clip::image_spec const *)spec);
 }
 
-ClipImage * clip_image_new_pp(void const * data, ClipImageSpec const * spec) {
+CCLIP_API ClipImage * clip_image_new_pp(void const * data, ClipImageSpec const * spec) {
 	return (ClipImage*)new clip::image(data, *(clip::image_spec const *)spec);
 }
 
-ClipImage * clip_image_new_fromImage(ClipImage const * image) {
+CCLIP_API ClipImage * clip_image_new_fromImage(ClipImage const * image) {
 	// TODO will this trigger the ref ctor or the move ctor?  
 	// when it shouldn't be moved ...
 	return (ClipImage*)new clip::image(*(clip::image const *)image);
 }
 
-void clip_image_free(ClipImage * image) {
+CCLIP_API void clip_image_free(ClipImage * image) {
 	delete (clip::image*)image;
 }
 
-char * clip_image_data(ClipImage const * image) {
+CCLIP_API char * clip_image_data(ClipImage const * image) {
 	return ((clip::image const *)image)->data();
 }
 
-ClipImageSpec const * clip_image_spec(ClipImage const * image) {
+CCLIP_API ClipImageSpec const * clip_image_spec(ClipImage const * image) {
 	return (ClipImageSpec const *)&((clip::image const *)image)->spec();
 }
 
-bool clip_image_is_valid(ClipImage const * image) {
+CCLIP_API bool clip_image_is_valid(ClipImage const * image) {
 	return ((clip::image const *)image)->is_valid();
 }
 
-void clip_image_reset(ClipImage * image) {
+CCLIP_API void clip_image_reset(ClipImage * image) {
 	((clip::image*)image)->reset();
 }
 
-bool clip_set_image(ClipImage const * image) {
+CCLIP_API bool clip_set_image(ClipImage const * image) {
 	return clip::set_image(*(clip::image const *)image);
 }
 
-bool clip_get_image(ClipImage * image) {
+CCLIP_API bool clip_get_image(ClipImage * image) {
 	return clip::get_image(*(clip::image*)image);
 }
 
-bool clip_get_image_spec(ClipImageSpec * spec) {
+CCLIP_API bool clip_get_image_spec(ClipImageSpec * spec) {
 	return clip::get_image_spec(*(clip::image_spec*)spec);
 }
 #endif
 
-void clip_set_x11_wait_timeout(int msecs) {
+CCLIP_API void clip_set_x11_wait_timeout(int msecs) {
 	clip::set_x11_wait_timeout(msecs);
 }
 
-int clip_get_x11_wait_timeout() {
+CCLIP_API int clip_get_x11_wait_timeout() {
 	return clip::get_x11_wait_timeout();
 }
-
-} // extern "C"
